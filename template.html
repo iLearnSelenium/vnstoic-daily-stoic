@@ -1,0 +1,21 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ content.title }}</title>
+
+  <link href="../styles/0001.css" rel="stylesheet" type="text/css" />
+  <link href="../styles/0002.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="calibre">
+  <p class="calibre_11"><span class="calibre1"><span class="bold">{{ content.title }}
+        #{{ content.index }}:</span></span><br class="calibre5" /><span class="calibre1"><span
+        class="bold">{{ content.chapter }}</span></span></p>
+  {% for paragraph in content.paragraphs -%}
+  {{ paragraph }}
+  {% endfor %}
+  <div class="mbp_pagebreak" id="calibre_pb_5"></div>
+</body>
+
+</html>
