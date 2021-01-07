@@ -9,13 +9,15 @@
 </head>
 
 <body class="calibre">
-  <p class="calibre_11"><span class="calibre1"><span class="bold">{{ content.title }}
-        #{{ content.index }}:</span></span><br class="calibre5" /><span class="calibre1"><span
-        class="bold">{{ content.chapter }}</span></span></p>
+  <h1 class="calibre_11"><span class="calibre1">{{ content.title }}
+        #{{ content.index }}:</span><br class="calibre5" /><span class="calibre1">{{ content.chapter }}</span></h1>
   {% for paragraph in content.paragraphs -%}
-  {{ paragraph }}
+  {% if paragraph.tag == "p" -%}
+    <p>{{ paragraph.text }}</p>
+  {% elif paragraph.tag == "blockquote" -%}
+    <blockquote><p>{{ paragraph.text }}</p> {% if paragraph.cite -%} <cite>{{ paragraph.cite }}</cite> {% endif %}</blockquote>
+  {% endif  %}
   {% endfor %}
-  <div class="mbp_pagebreak" id="calibre_pb_5"></div>
 </body>
 
 </html>

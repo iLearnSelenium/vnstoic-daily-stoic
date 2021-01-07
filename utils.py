@@ -2,6 +2,7 @@
 import re
 from jinja2 import Environment, FileSystemLoader
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 base_url = "https://vnstoic.com/category/daily-stoic/"
 driver=webdriver.Chrome(executable_path="chromedriver.exe")
 driver.maximize_window()
@@ -42,12 +43,29 @@ def getContent(url):
     headingElement = content.find_element_by_xpath("//*[@id=\"content\"]/div/div/article/h1")
     blockquoteElement = content.find_element_by_xpath("//*[@id=\"content\"]/div/div/article/div[3]/blockquote/p")
     authorElement = content.find_element_by_xpath("//*[@id=\"content\"]/div/div/article/div[3]/blockquote/cite")
-    paragraphElements = content.find_elements_by_xpath("//*[@id=\"content\"]/div/div/article/div[3]/*")
+    paragraphElements = content.find_elements_by_xpath("//*[@id=\"content\"]/div/div/article/div[3]/*[self::blockquote|self::p]")
     paragraphs = []
     for element in paragraphElements:
         if element.get_attribute("style") == "text-align: right;":
             break
-        paragraphs.append(element.get_attribute("outerHTML"))
+        paragraph = None
+        if element.tag_name == "p":
+            paragraph = {
+                "tag": "p",
+                "text": element.get_attribute('innerHTML')
+            }
+        elif element.tag_name == "blockquote":
+            found = element.find_elements(By.TAG_NAME, "cite")
+            cite = None
+            if len(found) > 0:
+                cite = found[0].text.lower()
+            paragraph = {
+                "tag": "blockquote",
+                "text": element.find_element(By.TAG_NAME, "p").get_attribute('innerHTML'),
+                "cite": cite
+            }
+        if paragraph is not None:
+            paragraphs.append(paragraph)
     print(headingElement.text)
     print(blockquoteElement.text)
     print(authorElement.text)
